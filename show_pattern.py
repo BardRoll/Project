@@ -78,7 +78,8 @@ class show_pattern():
                 lp.LedCtrlRaw(position+11 , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
                 check_position.append(position)
             time.wait(1000)
-        
+        time.wait(1000)
+        lp.Reset()
         return check_position
     
     def random_show_sequence(self, level):
@@ -90,10 +91,51 @@ class show_pattern():
             lp.LedCtrlRaw(button_position , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
             check_position.append(button_position)
             button_pattern.remove(button_position)
-            time.wait(1000)
+            if round != 2:
+                time.wait(1000)
+        time.wait(1000)
+        lp.Reset()
         return check_position
     
-    
+    def check_button_press_sequence(self, check):
+        pattern_check = check
+        press_check = []
+        timer1 = clock.perf_counter()
+        print("timer1 = ", timer1)
+        but_hit = len(pattern_check) * 2
+        print(but_hit)
+        while_loop = 1
+        check_position = 0
+        time_used_list = []
+            
+        while(while_loop):
+            but = lp.ButtonStateRaw()
+            if but != []:
+                lp.LedCtrlRaw(but[0], 0, 63, 0)
+                but_hit -= 1
+                if but[0] not in press_check: # but[0] can be same
+                    press_check.append(but[0])
+                    if press_check != [] and press_check[check_position] != pattern_check[check_position]:
+                        timer2 = clock.perf_counter()
+                        lp.LedAllOn(120)
+                        print("Wrong button!")
+                        print("timer2 = ",timer2)
+                        time_used_list.append(timer2 - timer1)
+                        while_loop = 0 # break while loop
+                        break
+                    check_position += 1
+                if but_hit < 1:
+                    timer2 = clock.perf_counter()
+                    print("timer2 = ",timer2)
+                    time_used_list.append(timer2 - timer1)
+                    lp.LedAllOn(20)
+                    while_loop = 0
+                    time.wait(1000)
+                    break
+                print( but_hit, "event: ", but )
+            time.wait( 5 )
+        return time_used_list
+        
 
 # Start test location
 # pattern_design.csv
@@ -105,11 +147,12 @@ test.import_csv()
 # test.load_csv()
 # test.csv_show()
 check_position = test.random_show_sequence(2)
+check_press = test.check_button_press_sequence(check_position)
 # print(test.pattern_list)
 lp.ButtonFlush()
 lp.Reset() # turn all LEDs off
 lp.Close() # close the Launchpad (will quit with an error due to a PyGame bug)
 print(check_position)
-
+print(check_press)
 
 # End test location
