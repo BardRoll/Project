@@ -25,14 +25,14 @@ if launchpad.LaunchpadMiniMk3().Check( 1 ):
 ###################
 
 class show_pattern():
-    def __init__(self, csv_file):
-        self.csv_filename = csv_file
+    def __init__(self):
+        self.csv_filename = ""
         self.pattern_list = []
         # self.customized = number
         self.mini_mk3_level_dict = {1: [44, 45, 54, 55], 2: [33, 34, 35, 36, 43, 44, 45, 46, 53, 54, 55, 56, 63, 64, 65, 66], 3: [22, 23, 24, 25, 26, 27, 32, 33, 34, 35, 36, 37, 42, 43, 44, 45, 46, 47, 52, 53, 54, 55, 56, 57, 62, 63, 64, 65, 66, 67, 72, 73, 74, 75, 76, 77]}
     
     def import_csv(self):
-        pass
+        self.csv_filename = input("Enter csv filename: ")
     
     def load_csv(self):
         # filename = input("Enter CSV filename: ")        
@@ -47,16 +47,11 @@ class show_pattern():
             self.pattern_list.append(row)
         # return self.pattern_list
     
-    def check_button_push(self):
-        data = self.pattern_list
-        
-        pass
-    
-    def fix_show(self):
+    def csv_show(self):
         len_pattern_list = len(self.pattern_list) # บอกว่ามีกี่ row
         number_of_button = len(self.pattern_list[0])
         check_position = []
-        check_while = 1
+        # check_while = 1
         
         # while(check_while):
         #     for round in range (1, len_pattern_list):
@@ -103,11 +98,12 @@ class show_pattern():
 # Start test location
 # pattern_design.csv
 print("start")
-filename = input("Enter csv filename: ")
-test = show_pattern(filename)
+# filename = input("Enter csv filename: ")
+test = show_pattern()
+test.import_csv()
 # print(test.load_csv())
 # test.load_csv()
-# test.fix_show()
+# test.csv_show()
 check_position = test.random_show_sequence(2)
 # print(test.pattern_list)
 lp.ButtonFlush()
