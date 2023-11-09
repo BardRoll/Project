@@ -97,6 +97,19 @@ class show_pattern():
         lp.Reset()
         return check_position
     
+    def random_show_simultaneous(self, level):
+        button_pattern = list(self.mini_mk3_level_dict[level])        
+        len_button_pattern = len(button_pattern)
+        check_position = []
+        for round in range (0,3):
+            button_position = random.choice(button_pattern)
+            lp.LedCtrlRaw(button_position , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
+            check_position.append(button_position)
+            button_pattern.remove(button_position)
+        time.wait(2000)
+        lp.Reset()
+        return check_position
+    
     def check_button_press_sequence(self, check):
         pattern_check = check
         press_check = []
@@ -135,6 +148,52 @@ class show_pattern():
                 print( but_hit, "event: ", but )
             time.wait( 5 )
         return time_used_list
+    
+    def check_button_press_simultaneous(self, check):
+        pattern_check = check
+        press_check = []
+        timer1 = clock.perf_counter()
+        print("timer1 = ", timer1)
+        but_hit = len(pattern_check) * 2
+        print(but_hit)
+        while_loop = 1
+        check_position = 0
+        time_used_list = []
+            
+        while(while_loop):
+            but = lp.ButtonStateRaw()
+            if but != []:
+                lp.LedCtrlRaw(but[0], 0, 63, 0)
+                but_hit -= 1
+                if but[0] not in press_check: # but[0] can be same
+                    press_check.append(but[0])
+                    press_position = press_check[check_position]
+                    print("press before: ", press_check)
+                    print("pattern before: ", pattern_check)
+                    if press_check != [] and press_check[check_position] not in pattern_check:
+                        timer2 = clock.perf_counter()
+                        lp.LedAllOn(120)
+                        print("Wrong button!")
+                        print("timer2 = ",timer2)
+                        time_used_list.append(timer2 - timer1)
+                        while_loop = 0 # break while loop
+                        break
+                    print("press position = ", press_position)
+                    check_position += 1
+                    pattern_check.remove(press_position)
+                    print("press after: ", press_check)
+                    print("pattern after: ", pattern_check)
+                if but_hit < 1:
+                    timer2 = clock.perf_counter()
+                    print("timer2 = ",timer2)
+                    time_used_list.append(timer2 - timer1)
+                    lp.LedAllOn(20)
+                    while_loop = 0
+                    time.wait(1000)
+                    break
+                print( but_hit, "event: ", but )
+            time.wait( 5 )
+        return time_used_list
         
 
 # Start test location
@@ -146,8 +205,13 @@ test.import_csv()
 # print(test.load_csv())
 # test.load_csv()
 # test.csv_show()
-check_position = test.random_show_sequence(2)
-check_press = test.check_button_press_sequence(check_position)
+
+# check_position = test.random_show_sequence(2)
+# check_press = test.check_button_press_sequence(check_position)
+
+check_position = test.random_show_simultaneous(2)
+check_press = test.check_button_press_simultaneous(check_position)
+
 # print(test.pattern_list)
 lp.ButtonFlush()
 lp.Reset() # turn all LEDs off
