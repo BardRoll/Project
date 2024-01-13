@@ -8,22 +8,11 @@ except ImportError:
 	except ImportError:
 		sys.exit("error loading launchpad.py")
 
-# import launchpad_py as lppy
 import random
 from pygame import time
 import time as clock
 from csv import reader
 import json
-
-# if launchpad.LaunchpadMiniMk3().Check( 1 ):
-# 	lp = launchpad.LaunchpadMiniMk3()
-# 	if lp.Open( 1, "minimk3" ):
-# 		print("Launchpad Mini Mk3")
-# 		mode = "Pro"
-
-# Remove after test
-# lp = launchpad.LaunchpadMiniMk3()
-###################
 
 class show_pattern():
     def __init__(self):
@@ -137,42 +126,43 @@ class show_pattern():
         file.close()
         return pattern_list
     
-    def csv_show(self):
-        lp = self.lp
-        len_pattern_list = len(self.pattern_list) # number of row
-        number_of_button = len(self.pattern_list[0])
-        check_position = []
-        # check_while = 1
+    # unused function
+    # def csv_show(self):
+    #     lp = self.lp
+    #     len_pattern_list = len(self.pattern_list) # number of row
+    #     number_of_button = len(self.pattern_list[0])
+    #     check_position = []
+    #     # check_while = 1
         
-        # while(check_while):
-        #     for round in range (1, len_pattern_list):
-        #         sec = self.pattern_list[round]
-        #         for position in range (number_of_button):
-        #             if sec[position] == "":
-        #                 continue
-        #             color = sec[position]
-        #             print("position = ", position, ", color = ", color)
-        #             lp.LedCtrlRaw(position+11 , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
-        #         time.wait(1000)
-        #     check_while = 0            
-            # pass
-        # pass
+    #     # while(check_while):
+    #     #     for round in range (1, len_pattern_list):
+    #     #         sec = self.pattern_list[round]
+    #     #         for position in range (number_of_button):
+    #     #             if sec[position] == "":
+    #     #                 continue
+    #     #             color = sec[position]
+    #     #             print("position = ", position, ", color = ", color)
+    #     #             lp.LedCtrlRaw(position+11 , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
+    #     #         time.wait(1000)
+    #     #     check_while = 0            
+    #         # pass
+    #     # pass
         
 
-        for round in range (1, len_pattern_list):
-            sec = self.pattern_list[round]
-            for position in range (number_of_button):
-                if sec[position] == "":
-                    continue
-                color = sec[position]
-                print("position = ", position, ", color = ", color)
-                lp.LedCtrlRaw(position+11 , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
-                if position+11 not in check_position:
-                    check_position.append(position+11)
-            time.wait(1000)
-        time.wait(1000)
-        lp.Reset()
-        return check_position
+    #     for round in range (1, len_pattern_list):
+    #         sec = self.pattern_list[round]
+    #         for position in range (number_of_button):
+    #             if sec[position] == "":
+    #                 continue
+    #             color = sec[position]
+    #             print("position = ", position, ", color = ", color)
+    #             lp.LedCtrlRaw(position+11 , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
+    #             if position+11 not in check_position:
+    #                 check_position.append(position+11)
+    #         time.wait(1000)
+    #     time.wait(1000)
+    #     lp.Reset()
+    #     return check_position
     
     def show_csv(self, pattern):
         lp = self.lp
@@ -215,25 +205,26 @@ class show_pattern():
         lp.Reset()
         return check_position
     
-    def random_show_sequence(self, level):
-        lp = self.lp
-        button_pattern = list(self.mini_mk3_level_dict[level])        
-        len_button_pattern = len(button_pattern)
-        check_position = []
-        for round in range (0,level+2): #2
-            button_position = random.choice(button_pattern)
-            a = random.randint(0,63)
-            b = random.randint(0,63)
-            c = random.randint(0,63)
-            # print("button position = ", lp.LedCtrlRaw, button_position, a,b,c)
-            lp.LedCtrlRaw(button_position , a, b, c )
-            check_position.append(button_position)
-            button_pattern.remove(button_position)
-            if round != level+1:
-                time.wait(1000)
-        time.wait(1000)
-        lp.Reset()
-        return check_position
+    # unused function
+    # def random_show_sequence(self, level):
+    #     lp = self.lp
+    #     button_pattern = list(self.mini_mk3_level_dict[level])        
+    #     len_button_pattern = len(button_pattern)
+    #     check_position = []
+    #     for round in range (0,level+2): #2
+    #         button_position = random.choice(button_pattern)
+    #         a = random.randint(0,63)
+    #         b = random.randint(0,63)
+    #         c = random.randint(0,63)
+    #         # print("button position = ", lp.LedCtrlRaw, button_position, a,b,c)
+    #         lp.LedCtrlRaw(button_position , a, b, c )
+    #         check_position.append(button_position)
+    #         button_pattern.remove(button_position)
+    #         if round != level+1:
+    #             time.wait(1000)
+    #     time.wait(1000)
+    #     lp.Reset()
+    #     return check_position
     
     def random_show_simultaneous(self, level):
         lp = self.lp
@@ -414,90 +405,92 @@ class show_pattern():
         lp.Reset()
         return time_used_list
     
-    def check_button_press_simultaneous(self, check):
-        lp = self.lp
-        pattern_check = check
-        press_check = []
-        timer1 = clock.perf_counter()
-        print("timer1 = ", timer1)
-        but_hit = len(pattern_check) * 2
-        print(but_hit)
-        while_loop = 1
-        check_position = 0
-        time_used_list = []
+    # unused function
+    # def check_button_press_simultaneous(self, check):
+    #     lp = self.lp
+    #     pattern_check = check
+    #     press_check = []
+    #     timer1 = clock.perf_counter()
+    #     print("timer1 = ", timer1)
+    #     but_hit = len(pattern_check) * 2
+    #     print(but_hit)
+    #     while_loop = 1
+    #     check_position = 0
+    #     time_used_list = []
             
-        while(while_loop):
-            but = lp.ButtonStateRaw()
-            if but != []:
-                lp.LedCtrlRaw(but[0], 0, 63, 0)
-                but_hit -= 1
-                if but[0] not in press_check: # but[0] can be same
-                    press_check.append(but[0])
-                    press_position = press_check[check_position]
-                    print("press before: ", press_check)
-                    print("pattern before: ", pattern_check)
-                    if press_check != [] and press_check[check_position] not in pattern_check:
-                        timer2 = clock.perf_counter()
-                        lp.LedAllOn(120)
-                        print("Wrong button!")
-                        print("timer2 = ",timer2)
-                        time_used_list.append(timer2 - timer1)
-                        while_loop = 0 # break while loop
-                        time.wait(1000)
-                        break
-                    print("press position = ", press_position)
-                    check_position += 1
-                    pattern_check.remove(press_position)
-                    print("press after: ", press_check)
-                    print("pattern after: ", pattern_check)
-                if but_hit < 1:
-                    timer2 = clock.perf_counter()
-                    # print("timer2 = ",timer2)
-                    time_used_list.append(timer2 - timer1)
-                    lp.LedAllOn(20)
-                    while_loop = 0
-                    time.wait(1000)
-                    break
-                print( but_hit, "event: ", but )
-        return time_used_list
+    #     while(while_loop):
+    #         but = lp.ButtonStateRaw()
+    #         if but != []:
+    #             lp.LedCtrlRaw(but[0], 0, 63, 0)
+    #             but_hit -= 1
+    #             if but[0] not in press_check: # but[0] can be same
+    #                 press_check.append(but[0])
+    #                 press_position = press_check[check_position]
+    #                 print("press before: ", press_check)
+    #                 print("pattern before: ", pattern_check)
+    #                 if press_check != [] and press_check[check_position] not in pattern_check:
+    #                     timer2 = clock.perf_counter()
+    #                     lp.LedAllOn(120)
+    #                     print("Wrong button!")
+    #                     print("timer2 = ",timer2)
+    #                     time_used_list.append(timer2 - timer1)
+    #                     while_loop = 0 # break while loop
+    #                     time.wait(1000)
+    #                     break
+    #                 print("press position = ", press_position)
+    #                 check_position += 1
+    #                 pattern_check.remove(press_position)
+    #                 print("press after: ", press_check)
+    #                 print("pattern after: ", pattern_check)
+    #             if but_hit < 1:
+    #                 timer2 = clock.perf_counter()
+    #                 # print("timer2 = ",timer2)
+    #                 time_used_list.append(timer2 - timer1)
+    #                 lp.LedAllOn(20)
+    #                 while_loop = 0
+    #                 time.wait(1000)
+    #                 break
+    #             print( but_hit, "event: ", but )
+    #     return time_used_list
     
-    def show_pattern_all(self):
-        # print("check lp = ", self.check_launchpad_function)
-        # if self.check_launchpad_function == 0:
-        #     self.check_launchpad()
-        #     print("activate")
-        lp = launchpad.LaunchpadMiniMk3()
-        self.lp = launchpad.LaunchpadMiniMk3()
-        # lp = self.lp
-        self.import_csv()
-        if self.csv_filename != "":
-            self.load_csv() # close csv!!
-            # self.check_launchpad()
-            # lp = self.lp
-            check_position = self.csv_show()
-            print("check_position = ",check_position)
-            time_use = self.check_button_press_sequence(check_position)
-            print("time use = ", time_use)
-        else:
-            print("No CSV file.")
-            # self.check_launchpad()
-            # lp = self.lp
-            level = int(input("Enter pattern level: "))
-            # for i in range(0,2):
-            #     check_position = self.random_show_sequence(level)
-            #     print("check_position = ",check_position)
-            #     time_use = self.check_button_press_sequence(check_position)
-            #     print("time use = ", time_use)
-            #     lp.ButtonFlush()
-            #     lp.Reset()
-            check_position = self.random_show_sequence(level)
-            print("check_position = ",check_position)
-            time_use = self.check_button_press_sequence(check_position)
-            print("time use = ", time_use)
-        lp.ButtonFlush()
-        lp.Reset()
-        # lp.Close()
-        x = {"time_use":time_use[0]}
-        y = json.dumps(x)
-        print(y)
-        return y
+    # unused function
+    # def show_pattern_all(self):
+    #     # print("check lp = ", self.check_launchpad_function)
+    #     # if self.check_launchpad_function == 0:
+    #     #     self.check_launchpad()
+    #     #     print("activate")
+    #     lp = launchpad.LaunchpadMiniMk3()
+    #     self.lp = launchpad.LaunchpadMiniMk3()
+    #     # lp = self.lp
+    #     self.import_csv()
+    #     if self.csv_filename != "":
+    #         self.load_csv() # close csv!!
+    #         # self.check_launchpad()
+    #         # lp = self.lp
+    #         check_position = self.csv_show()
+    #         print("check_position = ",check_position)
+    #         time_use = self.check_button_press_sequence(check_position)
+    #         print("time use = ", time_use)
+    #     else:
+    #         print("No CSV file.")
+    #         # self.check_launchpad()
+    #         # lp = self.lp
+    #         level = int(input("Enter pattern level: "))
+    #         # for i in range(0,2):
+    #         #     check_position = self.random_show_sequence(level)
+    #         #     print("check_position = ",check_position)
+    #         #     time_use = self.check_button_press_sequence(check_position)
+    #         #     print("time use = ", time_use)
+    #         #     lp.ButtonFlush()
+    #         #     lp.Reset()
+    #         check_position = self.random_show_sequence(level)
+    #         print("check_position = ",check_position)
+    #         time_use = self.check_button_press_sequence(check_position)
+    #         print("time use = ", time_use)
+    #     lp.ButtonFlush()
+    #     lp.Reset()
+    #     # lp.Close()
+    #     x = {"time_use":time_use[0]}
+    #     y = json.dumps(x)
+    #     print(y)
+    #     return y
