@@ -29,12 +29,10 @@ class show_pattern():
     def __init__(self):
         self.csv_filename = ""
         self.pattern_list = []
-        # self.customized = number
         self.mini_mk3_level_dict = {1: [44, 45, 54, 55], 2: [33, 34, 35, 36, 43, 44, 45, 46, 53, 54, 55, 56, 63, 64, 65, 66], 3: [22, 23, 24, 25, 26, 27, 32, 33, 34, 35, 36, 37, 42, 43, 44, 45, 46, 47, 52, 53, 54, 55, 56, 57, 62, 63, 64, 65, 66, 67, 72, 73, 74, 75, 76, 77]}
         self.mode = ""
         self.lp = ""
         self.check_launchpad_function = 0
-        # self.mini_mk3_matrix = {row_number:list of column_number}
         self.mini_mk3_matrix_dict = {1:[column for column in range(11,19)],
                                      2:[column for column in range(21,29)],
                                      3:[column for column in range(31,39)],
@@ -129,10 +127,6 @@ class show_pattern():
         self.csv_filename = file_path
     
     def load_csv(self, filename):
-        # filename = input("Enter CSV filename: ")        
-        # if filename == "":
-        #     return "No CSV file"
-        # filename = self.csv_filename
         pattern_list = []
         file = open(filename, "r")
         csv_reader = reader(file)
@@ -145,7 +139,7 @@ class show_pattern():
     
     def csv_show(self):
         lp = self.lp
-        len_pattern_list = len(self.pattern_list) # บอกว่ามีกี่ row
+        len_pattern_list = len(self.pattern_list) # number of row
         number_of_button = len(self.pattern_list[0])
         check_position = []
         # check_while = 1
@@ -185,14 +179,6 @@ class show_pattern():
         pattern_list = pattern
         row_pattern = len(pattern_list)
         column_pattern = len(pattern_list[0])
-        # pattern_list = [[7,"","","","","","",""],
-        #                 ["","3","","","","","",""],
-        #                 ["","","5","","","","",""],
-        #                 ["","","","4","","","",""],
-        #                 ["","","","","8","","",""],
-        #                 ["","","","","","2","",""],
-        #                 ["","","","","","","6",""],
-        #                 ["","","","","","","","1"]]
         pattern_dict = {}
         check_position = []
         position_number = 80 # for calculate position
@@ -226,7 +212,6 @@ class show_pattern():
         for index in range(0, len_check):
             lp.LedCtrlRaw(check_position[index] , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
             time.wait(1000)
-        # time.wait(1000)
         lp.Reset()
         return check_position
     
@@ -319,32 +304,31 @@ class show_pattern():
                         [column for column in range(71,79)],
                         [column for column in range(81,89)]]
         check_position = []
-        # fix color
+        # fix green color
         color1 = 0
         color2 = 63
         color3 = 0
-        # input "row" and "column" are string
+        # "row" and "column" input data are string
         if row != "random": # fix row
             row_num = self.split_number(row)
             if column == "random": # random column
                 for row_number in row_num:
-                    for round in range(0, key):
-                        button_position = random.choice(button_matrix[row_number])
-                        # button_position = button_matrix[row_number][random.randint(0,7)]
+                    for round in range(0, key): # key = number of lights 
+                        button_position = random.choice(button_matrix[row_number]) # random column number
                         if color == "multi": # random color
                             color1 = random.randint(0,63)
                             color2 = random.randint(0,63)
                             color3 = random.randint(0,63)
                         lp.LedCtrlRaw(button_position, color1, color2, color3)
                         check_position.append(button_position)
-                        button_matrix[row_number].remove(button_position)
+                        button_matrix[row_number].remove(button_position) # ensures that the position numbers are unique
                         if round != key-1:
                             time.wait(1000)
+                            
             elif column != "random": # fix column
                 # fix (only one) row and fix column -> sequence depends on column number
-                column_num = self.split_number(column)
-                column_list = self.change_number_to_position(row_num, column_num)
-                
+                column_num = self.split_number(column) # data may be have this format: "1,2,3"
+                column_list = self.change_number_to_position(row_num, column_num) # like: row 1 column 1 -> 11, row 2 column 3 -> 23 
                 for round in range(0, key):
                     button_position = column_list[round]
                     if color == "multi": # random color
@@ -355,13 +339,12 @@ class show_pattern():
                     check_position.append(button_position)
                     if round != key-1:
                         time.wait(1000)
+                        
         elif row == "random": # random row
             if column == "random": # random column
                 for round in range(0, key):
-                    # random_row = random.choice(row_number)
                     row_number = random.randint(1,8)
                     button_position = random.choice(button_matrix[row_number])
-                    # button_position = button_matrix[row_number][random.randint(0,7)]
                     if color == "multi": # random color
                         color1 = random.randint(0,63)
                         color2 = random.randint(0,63)
@@ -371,7 +354,7 @@ class show_pattern():
                     button_matrix[row_number].remove(button_position)
                     if round != key-1:
                         time.wait(1000)
-            # !!!!!!!
+                        
             elif column != "random": # fix column
                 # fix (only one) row and fix column -> sequence depends on column number
                 column_list = self.RandRow_FixColumn(column)
@@ -393,31 +376,25 @@ class show_pattern():
         lp = self.lp
         pattern_check = check
         press_check = []        
-        but_hit = len(pattern_check) * 2
-        # print(but_hit)
-        while_loop = 1
+        but_hit = len(pattern_check) * 2 # multiply 2 because lp.ButtonStateRaw() will read button when press or release
+        while_loop = 1 # for break while loop
         check_position = 0
         time_used_list = []
-        timer1 = clock.perf_counter()
-        # print("timer1 = ", timer1)
+        timer1 = clock.perf_counter() # start timer
             
         while(while_loop):
-            but = lp.ButtonStateRaw()
-            if but != []:
-                lp.LedCtrlRaw(but[0], 0, 63, 0)
+            but = lp.ButtonStateRaw() # need to read button all the time
+            if but != []: # press button
+                lp.LedCtrlRaw(but[0], 0, 63, 0) # show green color on button pressed
                 but_hit -= 1
                 if but[0] not in press_check: # but[0] can be same
                     press_check.append(but[0])
-                    # print("pattern", pattern_check)
-                    # print("check position", check_position)
-                    # print("pattern check = ", pattern_check[check_position])
-                    # print("press check", press_check[check_position])
                     if press_check != [] and press_check[check_position] != pattern_check[check_position]:
+                        # case: wrong button
                         timer2 = clock.perf_counter()
-                        lp.LedAllOn(120)
-                        # print("Wrong button!")
-                        # print("timer2 = ",timer2)
-                        time_used_list.append(timer2 - timer1)
+                        lp.LedAllOn(120) # red color show on entire launchpad panel
+                        time_use = timer2 - timer1
+                        time_used_list.append(time_use)
                         time_used_list.append("wrong")
                         time_used_list.append("fail: press " + str(press_check[check_position]) + ", but pattern is " + str(pattern_check[check_position]))
                         while_loop = 0 # break while loop
@@ -425,14 +402,15 @@ class show_pattern():
                         break
                     check_position += 1
                 if but_hit < 1:
+                    # case: all buttons pressed correctly
                     timer2 = clock.perf_counter()
-                    # print("timer2 = ",timer2)
-                    time_used_list.append(timer2 - timer1)
-                    lp.LedAllOn(20)
+                    time_use = timer2 - timer1
+                    time_used_list.append(time_use)
+                    lp.LedAllOn(20) # green color show on entire launchpad panel
                     while_loop = 0
                     time.wait(1000)
                     break
-                # print( but_hit, "event: ", but )
+        
         lp.Reset()
         return time_used_list
     
@@ -523,71 +501,3 @@ class show_pattern():
         y = json.dumps(x)
         print(y)
         return y
-        
-
-# Start test location
-# pattern_design.csv
-
-# print("start")
-
-# first test
-
-# test = show_pattern()
-# test.check_launchpad()
-
-# test.lp.Open( 1, "minimk3" )
-# for i in range(0,2):
-#     test.show_pattern_all()
-
-# check = test.random_show_sequence(1)
-# time_use = test.check_button_press_sequence(check)
-# test.lp.Reset()
-# print(time_use)
-
-# test.lp.Close()
-
-# print("====")
-
-# test.lp.Open( 1, "minimk3" )
-# test.check_launchpad()
-# print(test.check_launchpad())
-
-# print("+++")
-
-# test.check_launchpad()
-# test.random_show_sequence(1)
-# test.import_csv()
-# print(test.load_csv())
-# test.load_csv()
-# test.csv_show()
-
-# sequence test
-# check_position = test.random_show_sequence(2)
-# check_press = test.check_button_press_sequence(check_position)
-
-# simultaneous test
-# check_position = test.random_show_simultaneous(2)
-# check_press = test.check_button_press_simultaneous(check_position)
-
-
-# csv test
-# for i in range(0,2):
-#     print("round = ", i+1)
-#     test = show_pattern()
-#     test.show_pattern_all()
-    
-# test.show_pattern_all()
-# test.show_pattern_all()
-# test.random_show_simultaneous(1)
-
-# but = 45
-# lp.LedCtrlRaw(but , random.randint(0,63), random.randint(0,63), random.randint(0,63) )
-# time.wait(1000)
-# lp.ButtonFlush()
-# lp.Reset() # turn all LEDs off
-# lp.Close() # close the Launchpad (will quit with an error due to a PyGame bug)
-# print(check_position)
-# print(check_press)
-
-# End test location
-
