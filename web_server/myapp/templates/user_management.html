@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Student management</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Student management</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>สำเร็จ</strong>
+            </div>           
+        {% endfor %}
+    {% endif %}
+    <div>
+        <a class="addStd" href="/add_user">Add student</a>
+    </div>    
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for student ID.." title="Type in a number">
+    <table id="myTable">
+        <thead>
+            <tr class="header">
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in all_person %}
+                <tr>
+                    <td>{{person.student_id}}</td>
+                    <td>{{person.name}}</td>
+                    <td>{{person.surname}}</td>
+                    <td>
+                        <a class="edit" href="edit_user/{{person.student_id}}">Edit</a>
+                        <a class="delete_user" href="delete_user/{{person.student_id}}" onclick="return confirm('คุณต้องการลบ {{person.student_id}} {{person.name}} หรือไม่?')">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>        
+{% endblock %}

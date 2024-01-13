@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Control</title>
+{% endblock %}
+
+{% block content %}
+    <h2>Test control {{person.student_id}} {{person.name}}</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>{{message}}</strong>
+            </div>           
+        {% endfor %}
+    {% endif %}
+    <div class="container">        
+        <form method="post">
+            {% csrf_token %}
+            <!-- <label for="student_id">Student ID</label>
+            <input type="number" name="student_id" class="student_id" value="{{person.student_id}}">
+      
+            <label for="name">Name</label>
+            <input type="text" name="name" class="name">
+
+            <label for="surname">Surname</label>
+            <input type="text" name="surname" class="surname"> -->
+            <label for="test_name">Test name</label>
+            <input type="text" name="test_name" class="name" required>
+            <label for="start_key">Start key</label>
+            <input type="number" name="start_key" class="student_id" value="0">
+            <label for="end_key">End key</label>
+            <input type="number" name="end_key" class="student_id" value="0">
+            <label for="row">Row number</label>
+            <input type="text" name="row" class="name" value="0">
+            <p style="font-size: xx-small;">Format: 1 or 1,2,3 or random</p>
+            <label for="column">Column number</label>
+            <input type="text" name="column" class="name" value="0">
+            <p style="font-size: xx-small;">Format: 1 or 1,2,3 or random</p>
+            <label for="color">Color</label>
+            <input type="text" name="color" class="name" value="multi">
+            <p style="font-size: xx-small;">Format: single or multi</p>
+            <label for="trial">Trial</label>
+            <input type="number" name="trial" class="student_id" value="2">
+            <label for="csv">CSV file</label>
+            <div>
+                <select name="file" id="filename" onchange="showRandomNumberInput()" style="margin-top: 1%;">
+                    <!-- <option selected disabled>Select</option> -->
+                    <option value="-"></option>
+                    <option value="random">Random</option>
+                    {% for file in files %}
+                        <option value="{{file.file.name}}">{{ file.file.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="RandomNumberInput" style="display: none;">
+                <br>
+                <label for="random_number">Random number of CSV files</label>
+                <input type="number" id="extraInput" class="student_id" name="random_number">
+            </div>
+            <input type="submit" value="Start" class="savebtn">
+            <a href="/" class="cancelbtn">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

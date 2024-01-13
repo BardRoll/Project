@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Upload CSV</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Upload CSV</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>{{message}}</strong>
+            </div>           
+        {% endfor %}
+    {% endif %}
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>   
+        <br>
+        <h2>Files list</h2>
+        <ul>
+            {% for file in files %}
+                <li>{{ file.file.name }}</li>
+            {% endfor %}
+        </ul>
+        <!-- <ul>
+            <li>{{filename}}</li>
+        </ul> -->
+        {% if form.errors %}
+            <p>{{ form.errors.file.0 }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

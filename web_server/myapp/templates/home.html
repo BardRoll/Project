@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Homepage</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Homepage</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>{{message}}</strong>
+            </div>           
+        {% endfor %}
+    {% endif %}
+    {% if user.is_authenticated %}
+        <div>
+          <a class="addStd" href="/add_user">Add student</a>
+          <a class="showButton" href="/upload_csv">Upload CSV</a>
+          <a class="testresultButton" href="/test_result_all">Test result all</a>
+        </div>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for student ID.." title="Type in a number">
+        <table id="myTable">      
+            <thead>
+                <tr class="header">
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Control</th>
+                    <th>Show result</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in all_person %}
+                    <tr>
+                        <td>{{person.student_id}}</td>
+                        <td>{{person.name}}</td>
+                        <td>{{person.surname}}</td>
+                        <td><a class="showButton" href="test_control/{{person.student_id}}">Control</a></td>
+                        <td><a class="showButton" href="test_result/{{person.student_id}}">Show result</a></td>
+                        <td>
+                          <a class="edit" href="edit_user/{{person.student_id}}">Edit</a>
+                          <a class="delete_user" href="delete_user/{{person.student_id}}" onclick="return confirm('คุณต้องการลบ {{person.student_id}} {{person.name}} หรือไม่?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div>
+            <a class="showButton" href="/test_result_all">Test result all</a>
+        </div>
+        <table id="myTable">
+            <thead>
+                <tr class="header">
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Show result</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in all_person %}
+                    <tr>
+                        <td>{{person.student_id}}</td>
+                        <td>{{person.name}}</td>
+                        <td>{{person.surname}}</td>
+                        <td><a class="showButton" href="test_result/{{person.student_id}}">Show result</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}      
+{% endblock %}

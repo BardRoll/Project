@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Test results</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Test results {{person.student_id}} {{person.name}}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div>                
+            <select name="test_name" id="filename" style="margin-top: 1%;">
+                <option selected disabled>Select test</option>
+                {% for key, item in test_control.items %}
+                    <option value="{{item}}">{{ item }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Select" class="savebtn">
+        </div>            
+    </form>
+    <h2>Test name: 
+        {% for key, result in test_name.items %}
+            {{result}}
+        {% endfor %}
+    </h2>
+    <table id="myTable2">      
+        <thead>
+            <tr class="header">
+                <th>Keys</th>
+                <th>Time used 1</th>
+                <th>Time used 2</th>
+                <th>Best time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, result in all_result.items %}
+                <tr>
+                    <td>{{key}}</td>
+                    <td>{{result.time_1}}</td>
+                    <td>{{result.time_2}}</td>
+                    <td>{{result.best_time}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table> 
+    <canvas id="myBarChart" class="chartjs-render-monitor" width="300" height="150"></canvas>
+    {% comment %} <script>
+        const dataFromDjango = {{ all_result|safe }};
+
+        // สร้าง arrays เพื่อเก็บข้อมูลที่ใช้ใน Bar Chart
+        const test_name = [];
+        const time1 = [];
+        const time2 = [];
+        const labels = [];
+        const firstData = [];
+        const secondData = [];
+
+        // วนลูปผ่านข้อมูลที่ได้รับจาก Django แล้วเก็บข้อมูลใน arrays
+        for (const key in dataFromDjango) {
+            if (Object.hasOwnProperty.call(dataFromDjango, key)) {
+                const data = dataFromDjango[key];
+                key_num.push(data.key);
+                time1.push(data.time_1);
+                time2.push(data.time_2);
+            }
+        }
+
+        // Create bar chart
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        const myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: key_num,
+                datasets: [
+                    {
+                        label: 'Time 1',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        data: time1,
+                    },
+                    {
+                        label: 'Time 2',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: time2,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true },
+                },
+            },
+        });
+    </script> {% endcomment %}
+    <script>
+        // ข้อมูลจาก Django
+        const dataFromDjango = {{ all_result|safe }};
+
+        // สร้าง arrays เพื่อให้ Chart.js นำไปใช้
+        const labels = Object.keys(dataFromDjango);
+        const time1Data = labels.map(key => dataFromDjango[key].time_1);
+        const time2Data = labels.map(key => dataFromDjango[key].time_2);
+
+        // Create bar chart
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        const myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Time 1',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        data: time1Data,
+                    },
+                    {
+                        label: 'Time 2',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        data: time2Data,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true },
+                },
+            },
+        });
+    </script>
+    <!-- <table id="myTable2">      
+        <thead>
+            <tr class="header">
+                <th>Test ID</th>
+                <th>Keys</th>
+                <th>Pattern</th>
+                <th>Trial</th>
+                <th>Time used</th>
+                <th>CSV file</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in all_result %}
+                <tr>
+                    <td>{{result.test_id}}</td>
+                    <td>{{result.number_of_keys}}</td>
+                    <td>{{result.pattern}}</td>
+                    <td>{{result.trials}}</td>
+                    <td>{{result.time_use}}</td>
+                    <td>{{result.csv_name}}</td>
+                    <td>{{result.status}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+      
+{% endblock %}

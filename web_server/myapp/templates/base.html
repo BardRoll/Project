@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="{% static 'html2pdf.bundle.min.js' %}"></script>
+    {% block title %}
+    {% endblock %}
+</head>
+<body>
+    <div class="topnav">
+        <!-- <a class="active" href="/">Homepage</a>
+        <a href="#">Student management</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a> -->
+        {% if user.is_authenticated %}
+          <a class="active" href="/">Homepage</a>
+          <a style="float: right;" href="{% url 'sign-out' %}">Sign out</a>
+          <a style="float: right;" href="admin">{{ user.username }}</a>          
+        {% else %}
+          <a class="active" href="/">Homepage</a>
+          <a style="float: right;" href="sign-in">Sign in</a>
+        {% endif %}
+        <!-- <a style="float: right;" href="#">Sign in</a> -->
+        <!-- <a style="float: right;" href="#">Username</a> -->
+    </div>
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Launchpad</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">หน้าแรก</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/form">Form</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <div> -->
+        {% block content %}
+        {% endblock %}
+    <!-- </div> -->
+    <script>
+      function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }       
+        }
+      }
+
+      function myFunction2() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable2");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }       
+        }
+      }
+
+      function showInput() {
+          var select = document.querySelector("select");
+          var input = document.querySelector("input");
+      
+          if (select.value == "random") {
+              input.style.display = "block";
+          } else {
+              input.style.display = "none";
+          }
+      }
+      function showRandomNumberInput() {
+        var selectElement = document.getElementById("filename");
+        var additionalInputElement = document.getElementById("RandomNumberInput");
+  
+        // Check if the selected option is the one that requires additional input
+        if (selectElement.value === "random") {
+          additionalInputElement.style.display = "block";
+        } else {
+          additionalInputElement.style.display = "none";
+        }
+      }
+
+      function downloadPdf() {
+        const element = document.getElementById('pdf-content');
+        const options = {
+                margin: 10,
+                filename: 'test_result_all.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+        html2pdf(element, options);
+      }
+    </script>
+</body>
+</html>

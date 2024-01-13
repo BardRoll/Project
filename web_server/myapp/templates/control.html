@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Control</title>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Control {{person.student_id}} {{person.name}}</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <strong>{{message}}</strong>
+            </div>           
+        {% endfor %}
+    {% endif %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <!-- <label for="student_id">Student ID</label>
+            <input type="number" name="student_id" class="student_id" value="{{person.student_id}}">
+      
+            <label for="name">Name</label>
+            <input type="text" name="name" class="name">
+
+            <label for="surname">Surname</label>
+            <input type="text" name="surname" class="surname"> -->
+
+            <label for="level">Level</label>
+            <input type="number" name="level" class="student_id" value=0>
+            <label for="round">Round</label>
+            <input type="number" name="round" class="student_id" value=0>
+            <label for="random">Random</label>
+            <input type="checkbox" name="random" value="random" class="surname">
+            <h1>OR</h1>
+            <div>
+                <select name="file" id="filename">
+                    <option selected disabled>Select</option>   
+                    {% for file in files %}
+                        <option value="{{file.file.name}}">{{ file.file.name }}</option>
+                    {% endfor %}         
+                        
+                </select>
+            </div>
+            <input type="submit" value="Save" class="savebtn">
+            <a href="/" class="cancelbtn">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

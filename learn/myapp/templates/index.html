@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>หน้าแรก</title>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">ข้อมูลประชากรทั้งหมด</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                <strong>{{message}}</strong>
+            </div>            
+        {% endfor %}
+    {% endif %}
+    <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">ชื่อประชากร</th>
+            <th scope="col">อายุ</th>
+            <th scope="col">วันที่เพิ่มข้อมูล</th>
+            <th scope="col">แก้ไข</th>
+            <th scope="col">ลบ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for person in all_person %}
+            <tr>
+                <th scope="row">{{person.id}}</th>
+                <td>{{person.name}}</td>
+                <td>{{person.age}}</td>
+                <td>{{person.date}}</td>
+                <td><a href="edit/{{person.id}}" class="btn btn-warning">แก้ไข</a></td>
+                <td>
+                    <a href="delete/{{person.id}}" 
+                    class="btn btn-danger"
+                    onclick="return confirm('คุณต้องการลบ {{person.name}} หรือไม่?')"
+                    >
+                    ลบ
+                    </a>
+                </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% comment %} <h1 style="color:red;">Home page</h1>
+    <h2>Hello, {{ name | upper }}!</h2>
+    <h2>You are {{ age }}</h2>
+    {% if age >= 20 %}
+        <h2>Teen</h2>
+    {% elif age < 20 %}
+        <h2>Child</h2>
+    {% endif %} {% endcomment %}
+{% endblock %}
