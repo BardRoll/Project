@@ -5,6 +5,7 @@ class Person(models.Model):
     student_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
+    student_type = models.CharField(max_length=100, blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     
     def __str__(self):
