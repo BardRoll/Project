@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Test results {{person.student_id}} {{person.name}}</h1>
+    <h2>Test results {{person.student_id}} {{person.name}}</h2>
     <form method="post">
         {% csrf_token %}
         <div>                
