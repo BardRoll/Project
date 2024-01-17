@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from myapp.models import Person
-from myapp.models import RandomTestControl
 from myapp.models import TestControl
 from myapp.models import TestResult
 from myapp.models import CSVFile

@@ -4,9 +4,6 @@ from myapp.models import Person
 # Register your models here.
 admin.site.register(Person)
 
-from myapp.models import RandomTestControl
-admin.site.register(RandomTestControl)
-
 from myapp.models import TestControl
 admin.site.register(TestControl)
 

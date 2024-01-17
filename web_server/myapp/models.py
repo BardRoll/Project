@@ -11,25 +11,12 @@ class Person(models.Model):
     def __str__(self):
         return str(self.student_id) + " " + self.name + " " + str(self.surname)
     
-class RandomTestControl(models.Model):
-    student_id = models.ForeignKey(Person, on_delete=models.CASCADE)
-    random = models.CharField(max_length=100, null = True)
-    level = models.IntegerField(null = True)
-    round = models.IntegerField(null = True)
-    csv_name = models.CharField(max_length=200, null = True)
-    
-    def __str__(self):
-        # return str(self.student_id) + ", round = " + str(self.round) + ", level = " + str(self.level) + ", random = " + self.random + ", filename = " + self.csv_name
-        return str(self.student_id)
-
 class TestControl(models.Model):
     student_id = models.ForeignKey(Person, on_delete=models.CASCADE)
     test_name = models.CharField(max_length=100, blank=True, null=True)
     # number of buttons to show in each level
     start_number_of_keys = models.IntegerField(blank=True, null = True)
     end_number_of_keys = models.IntegerField(blank=True,null = True)
-    # ???
-    array = models.CharField(max_length=10, blank=True, null = True)
     row_number = models.CharField(max_length=20, blank=True, null = True)
     column_number = models.CharField(max_length=20, blank=True, null = True)
     color = models.CharField(max_length=10, blank=True, null = True)    
@@ -51,6 +38,7 @@ class TestResult(models.Model):
     time_use = models.FloatField(blank=True, null = True)
     status = models.CharField(max_length = 10, blank=True, null = True)
     csv_name = models.TextField(default="-" ,blank=True, null = True)
+    time_per_button = models.TextField(blank=True, null = True)
     
     def __str__(self):
         return str(self.test_id) + ", key = " + str(self.number_of_keys) + ", trial = " + str(self.trials) + ", time use = " + str(self.time_use)
