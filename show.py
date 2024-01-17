@@ -27,15 +27,18 @@ def main(data_from_django):
                 load = show.load_csv(filename)
                 check = show.show_csv(load)
                 res = show.check_button_press_sequence(check)
-                round_time = round(res[0], 2)
+                len_res = len(res[0])
+                for i in range(0, len_res):
+                    res[0][i] = round(res[0][i], 2)
+                time_use = round(res[0][len_res-1] - res[0][0], 2)
                 key = len(check)
                 if res[len(res)-2] == "wrong":
-                    result_trial = [key, check, trial+1, round_time, res[len(res)-1], csv_name[i]]
+                    result_trial = [key, check, trial+1, res[0], time_use, res[len(res)-1], csv_name[i]]
                     result_level.append(result_trial)
                     check_break = 1
                     break
                 else:
-                    result_trial = [key, check, trial+1, round_time, "pass", csv_name[i]]
+                    result_trial = [key, check, trial+1, res[0], time_use, "pass", csv_name[i]]
                     result_level.append(result_trial)
             result.append(result_level)
             if check_break == 1:
@@ -51,14 +54,17 @@ def main(data_from_django):
             for trial in range(0, trials):
                 check = show.show_sequence(key,row,column,color)
                 res = show.check_button_press_sequence(check)
-                round_time = round(res[0], 2)
+                len_res = len(res[0])
+                for i in range(0, len_res):
+                    res[0][i] = round(res[0][i], 2)
+                time_use = round(res[0][len_res-1] - res[0][0], 2)
                 if res[len(res)-2] == "wrong":
-                    result_trial = [key, check, trial+1, round_time, res[len(res)-1]]
+                    result_trial = [key, check, trial+1, res[0], time_use, res[len(res)-1]]
                     result_level.append(result_trial)
                     check_break = 1
                     break
                 else:
-                    result_trial = [key, check, trial+1, round_time, "pass"]
+                    result_trial = [key, check, trial+1, res[0], time_use, "pass"]
                     result_level.append(result_trial)
             result.append(result_level)
             key += 1

@@ -371,40 +371,48 @@ class show_pattern():
         while_loop = 1 # for break while loop
         check_position = 0
         time_used_list = []
+        time_press_button = []
         timer1 = clock.perf_counter() # start timer
-            
+        time_press_button.append(timer1)
         while(while_loop):
             but = lp.ButtonStateRaw() # need to read button all the time
             if but != []: # press button
+                timer2 = clock.perf_counter()
                 lp.LedCtrlRaw(but[0], 0, 63, 0) # show green color on button pressed
                 but_hit -= 1
-                if but[0] not in press_check: # but[0] can be same
-                    press_check.append(but[0])
-                    if press_check != [] and press_check[check_position] != pattern_check[check_position]:
-                        # case: wrong button
-                        timer2 = clock.perf_counter()
-                        lp.LedAllOn(120) # red color show on entire launchpad panel
-                        time_use = timer2 - timer1
-                        time_used_list.append(time_use)
-                        time_used_list.append("wrong")
-                        time_used_list.append("fail: press " + str(press_check[check_position]) + ", but pattern is " + str(pattern_check[check_position]))
-                        while_loop = 0 # break while loop
-                        time.wait(1000)
-                        break
+                if (but[0] not in press_check) and (but[1]!=0): # but[0] can be same, (if press, but[1]==127 else but[1]==0)
+                    press_check.append(but[0])                    
+                    if press_check != []:
+                        if press_check[check_position] != pattern_check[check_position]:
+                            # case: wrong button
+                            #timer2 = clock.perf_counter()
+                            lp.LedAllOn(120) # red color show on entire launchpad panel
+                            # time_use = timer2 - timer1
+                            time_press_button.append(timer2)
+                            time_used_list.append(time_press_button)
+                            time_used_list.append("wrong")
+                            time_used_list.append("fail: press " + str(press_check[check_position]) + ", but pattern is " + str(pattern_check[check_position]))
+                            #while_loop = 0 # break while loop
+                            time.wait(1000)
+                            break
+                        else:
+                            #timer2 = clock.perf_counter()
+                            time_press_button.append(timer2)
                     check_position += 1
                 if but_hit < 1:
                     # case: all buttons pressed correctly
-                    timer2 = clock.perf_counter()
-                    time_use = timer2 - timer1
-                    time_used_list.append(time_use)
+                    time_used_list.append(time_press_button)
+                    # timer2 = clock.perf_counter()
+                    # time_use = timer2 - timer1
+                    # time_used_list.append(time_use)
                     lp.LedAllOn(20) # green color show on entire launchpad panel
                     while_loop = 0
                     time.wait(1000)
                     break
-        
+
         lp.Reset()
         return time_used_list
-    
+
     # unused function
     # def check_button_press_simultaneous(self, check):
     #     lp = self.lp
