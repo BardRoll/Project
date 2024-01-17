@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+    
 {% block title %}
     <title>Test results</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
@@ -49,123 +49,52 @@
             {% endfor %}
         </tbody>
     </table> 
-    <canvas id="myBarChart" class="chartjs-render-monitor" width="300" height="150"></canvas>
-    {% comment %} <script>
+    <br>
+    <div id="TimeChart" style="max-width:60%; max-height:60%; z-index:1; margin:auto; position:relative;"></div>
+    
+    <script>
         const dataFromDjango = {{ all_result|safe }};
-
-        // สร้าง arrays เพื่อเก็บข้อมูลที่ใช้ใน Bar Chart
-        const test_name = [];
-        const time1 = [];
-        const time2 = [];
-        const labels = [];
-        const firstData = [];
-        const secondData = [];
-
-        // วนลูปผ่านข้อมูลที่ได้รับจาก Django แล้วเก็บข้อมูลใน arrays
-        for (const key in dataFromDjango) {
-            if (Object.hasOwnProperty.call(dataFromDjango, key)) {
-                const data = dataFromDjango[key];
-                key_num.push(data.key);
-                time1.push(data.time_1);
-                time2.push(data.time_2);
+        var chartData = [];
+        for (var key in dataFromDjango) {
+            if (dataFromDjango.hasOwnProperty(key)) {
+                var value = dataFromDjango[key];
+                chartData.push({
+                    x: key,
+                    y: [value.time_1, value.time_2]
+                });
             }
         }
 
-        // Create bar chart
-        const ctx = document.getElementById('myBarChart').getContext('2d');
-        const myBarChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: key_num,
-                datasets: [
-                    {
-                        label: 'Time 1',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        data: time1,
-                    },
-                    {
-                        label: 'Time 2',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        data: time2,
-                    },
-                ],
+        var options = {
+            chart: {
+                type: 'bar'
             },
-            options: {
-                scales: {
-                    y: { beginAtZero: true },
+            title: {
+                text: "Time comparison"
+            },
+            series: [
+                {
+                    name: 'Time 1',
+                    data: chartData.map(item => item.y[0])
                 },
+                {
+                    name: 'Time 2',
+                    data: chartData.map(item => item.y[1])
+                }
+            ],
+            xaxis: {
+                categories: chartData.map(item => item.x),
+                title: {
+                    text: 'Keys'
+                }
             },
-        });
-    </script> {% endcomment %}
-    <script>
-        // ข้อมูลจาก Django
-        const dataFromDjango = {{ all_result|safe }};
-
-        // สร้าง arrays เพื่อให้ Chart.js นำไปใช้
-        const labels = Object.keys(dataFromDjango);
-        const time1Data = labels.map(key => dataFromDjango[key].time_1);
-        const time2Data = labels.map(key => dataFromDjango[key].time_2);
-
-        // Create bar chart
-        const ctx = document.getElementById('myBarChart').getContext('2d');
-        const myBarChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Time 1',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        data: time1Data,
-                    },
-                    {
-                        label: 'Time 2',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        data: time2Data,
-                    },
-                ],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true },
-                },
-            },
-        });
-    </script>
-    <!-- <table id="myTable2">      
-        <thead>
-            <tr class="header">
-                <th>Test ID</th>
-                <th>Keys</th>
-                <th>Pattern</th>
-                <th>Trial</th>
-                <th>Time used</th>
-                <th>CSV file</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for result in all_result %}
-                <tr>
-                    <td>{{result.test_id}}</td>
-                    <td>{{result.number_of_keys}}</td>
-                    <td>{{result.pattern}}</td>
-                    <td>{{result.trials}}</td>
-                    <td>{{result.time_use}}</td>
-                    <td>{{result.csv_name}}</td>
-                    <td>{{result.status}}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
-      
+            yaxis: {
+                title: {
+                    text: 'Time(sec)'
+                }
+            }
+        };
+        var chart = new ApexCharts(document.querySelector("#TimeChart"), options);
+        chart.render();        
+    </script>      
 {% endblock %}

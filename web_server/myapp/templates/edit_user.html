@@ -6,23 +6,6 @@
 
 {% block content %}
     <h2>Edit student</h2>
-    <!-- <form method="post">
-        {% csrf_token %}
-        <div class="form-group mb-3">
-            <label for="student_id">Student ID</label>
-            <input type="number" name="student_id" class="student_id" value="{{person.student_id}}">
-        </div>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" class="name" value="{{person.name}}">
-        </div>
-        <div class="form-group mb-3">
-            <label for="surname">Surname</label>
-            <input type="text" name="surname" class="surname" value="{{person.surname}}">
-        </div>
-        <input type="submit" value="บันทึกข้อมูล" class="savebtn">
-        <a href="/user_management" class="cancelbtn">cancel</a>
-    </form> -->
     <div class="container">
         <form method="post">
             {% csrf_token %}

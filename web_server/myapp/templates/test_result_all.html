@@ -6,8 +6,11 @@
 
 {% block content %}
     <h2>Test results all</h2>
+    <input type="text" id="myInput" onkeyup="SearchFunction2()" placeholder="Search for student ID.." title="Type in a number">
+    <br>
     <!-- <a class="showButton" onclick="downloadPdf()">Download PDF</a> -->
-    <button onclick="downloadPdf()" id="downloadbtn">Download PDF</button>
+    <button onclick="downloadPdf()" id="downloadbtn">Download as PDF</button>
+    <button onclick="downloadCSV()" id="downloadCSV">Download as CSV</button>
     <div id="pdf-content">
         <table id="myTable2">      
             <thead>
@@ -16,7 +19,7 @@
                     <th>Name</th>
                     <th>Test</th>
                     <th>Max key</th>
-                    <th>Time</th>
+                    <th>Time (sec)</th>
                 </tr>
             </thead>
             <tbody>
