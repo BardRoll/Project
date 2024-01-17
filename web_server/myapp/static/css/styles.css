@@ -75,7 +75,7 @@ a.showButton:hover, a.showButton:active {
     color: white;
 }
 
-a.addStd:link, a.addStd:visited {
+a.addStd:link, a.addStd:visited, button#downloadCSV {
     background-color: transparent;
     color: black;
     border: 2px solid #04AA6D;
@@ -88,7 +88,7 @@ a.addStd:link, a.addStd:visited {
     margin-bottom: 12px;
 }
 
-a.addStd:hover, a.addStd:active {
+a.addStd:hover, a.addStd:active, button#downloadCSV:hover {
     background-color: #04AA6D;
     color: white;
 }
@@ -314,7 +314,7 @@ input[type=submit].signinbtn:hover {
     background-color: #45a049;
 }
 
-select#filename {
+select#filename, select#std_type {
     width: 25%;
     font-size: medium;
 }
@@ -326,7 +326,7 @@ option {
 button#downloadbtn {
     background-color: transparent;
     color: black;
-    border: 2px solid #008CBA;
+    border: 2px solid #F40F02;
     border-radius: 8px;
     padding: 14px 25px;
     text-align: center;
@@ -336,7 +336,7 @@ button#downloadbtn {
 }
 
 button#downloadbtn:hover {
-    background-color: #008CBA;
+    background-color: #F40F02;
     color: white;
 }
 
