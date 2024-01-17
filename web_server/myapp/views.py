@@ -54,14 +54,24 @@ def add_user(request):
     if request.method == "POST":
         # รับข้อมูล
         student_id = request.POST["student_id"]
+        if Person.objects.exists():
+            persons = Person.objects.all()
+            for person in persons:
+                if person.student_id == int(student_id):
+                    messages.info(request,"Student id: " + str(student_id) + " has already been created!")
+                    return render(request,"add_user.html")
         name = request.POST["name"]
         surname = request.POST["surname"]
-        # print(name, surname)
-        # บันทึกข้อมูล
+        student_type = request.POST["student_type"]
+        if "sports_type" in request.POST:
+            student_type = request.POST["sports_type"]
+        
+        # บันทึกข้อมูล        
         person = Person.objects.create(
             student_id = student_id,
             name = name,
             surname = surname,
+            student_type = student_type
         )
         person.save()
         messages.success(request,"Successfully saved")
@@ -77,6 +87,7 @@ def edit_user(request, student_id):
         person.student_id = request.POST["student_id"]
         person.name = request.POST["name"]
         person.surname = request.POST["surname"]
+        person.student_type = request.POST["student_type"]
         person.save()
         messages.success(request,"Successfully updated")
         return redirect("/")  
@@ -234,8 +245,9 @@ def custom_test_control(request, student_id):
                     tr.number_of_keys = int(output_json[i][j][0])
                     tr.pattern = output_json[i][j][1]
                     tr.trials = int(output_json[i][j][2])
-                    tr.time_use = float(output_json[i][j][3])
-                    tr.status = output_json[i][j][4]
+                    tr.time_per_button = output_json[i][j][3]
+                    tr.time_use = float(output_json[i][j][4])
+                    tr.status = output_json[i][j][5]
                     tr.save()
         else:
             for i in range(0, len_output):
@@ -246,11 +258,12 @@ def custom_test_control(request, student_id):
                     tr.number_of_keys = int(output_json[i][j][0])
                     tr.pattern = output_json[i][j][1]
                     tr.trials = int(output_json[i][j][2])
-                    tr.time_use = float(output_json[i][j][3])
-                    tr.status = output_json[i][j][4]
-                    tr.csv_name = output_json[i][j][5]
+                    tr.time_per_button = output_json[i][j][3]
+                    tr.time_use = float(output_json[i][j][4])
+                    tr.status = output_json[i][j][5]
+                    tr.csv_name = output_json[i][j][6]
                     tr.save()
-        messages.success(request,"Successfully controled, test id = " + str(tr.test_id))
+        messages.success(request,"Successfully controled, test: " + str(tc.test_name))
         files = CSVFile.objects.all()
         return render(request, "test_control.html", {"person":person, 'files':files})
     else:
@@ -419,20 +432,20 @@ def test_result(request, student_id):
                 tcs[tc.id] = tc.test_name
             ress = TestResult.objects.filter(test_id=tc)
             for res in ress:
-                print("#########")
-                print(tc.test_name, " ", test_name)
-                print("#########")
-                if res.number_of_keys not in return_dict and tc.test_name == test_name: # ต้องใช้ test_name ตรง int(id_na), ควรจะใช้ res.test_id แทน tc.id หรือเปล่า
-                    print("yes")
-                    return_dict[res.number_of_keys] = {'id':tc.test_name, 'time_1':res.time_use, 'time_2':'-', 'best_time':res.time_use}
+                # print("#########")
+                # print(tc.test_name, " ", test_name)
+                # print("#########")
+                if res.number_of_keys not in return_dict and tc.test_name == test_name:
+                    # print("yes")
+                    return_dict[res.number_of_keys] = {'id':tc.test_name, 'time_1':res.time_use, 'time_2':'-', 'best_time':res.time_use, 'but_timestamp_1':res.time_per_button, 'but_timestamp_2':"-"}
                 else:
-                    if tc.test_name != test_name: # ต้องใช้ test_name ตรง int(id_na)
-                        # print('here')
+                    if tc.test_name != test_name:
                         continue
                     return_dict[res.number_of_keys]['time_2'] = res.time_use
+                    return_dict[res.number_of_keys]['but_timestamp_2'] = res.time_per_button
                     if res.time_use < return_dict[res.number_of_keys]['best_time'] and res.status == "pass":
                         return_dict[res.number_of_keys]['best_time'] = res.time_use
-        print(return_dict)
+        # print(return_dict)
         return render(request, "test_result.html", {"all_result":return_dict, "person":person, "test_control":tcs, "test_name":{test_name:test_name}})
     else:
         person = Person.objects.get(student_id=student_id)
@@ -441,7 +454,7 @@ def test_result(request, student_id):
         for tc in tcss:
             if tc.id not in tcs and tc.student_id == person:
                 tcs[tc.id] = tc.test_name
-        print(tcs)
+        # print(tcs)
         return render(request, "test_result.html", {"person":person, "test_control":tcs})
     
 def test_result_all(request):
@@ -465,3 +478,22 @@ def test_result_all(request):
                         return_dict[tc.id]['time'] = res.time_use
     
     return render(request, "test_result_all.html", {"all_result":return_dict})
+
+# import csv
+
+# def download_csv(request):
+#     # ดึงข้อมูลจาก Django ที่ต้องการให้ผู้ใช้ดาวน์โหลด
+#     data = TestResult.objects.all()
+
+#     # สร้าง HttpResponse สำหรับ CSV
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="test_result_all.csv"'
+
+#     # ใช้ csv.writer เพื่อเขียนข้อมูลลงใน HttpResponse
+#     writer = csv.writer(response)
+#     writer.writerow(['Header1', 'Header2', 'Header3'])  # เพิ่มหัวข้อที่ต้องการใน CSV
+
+#     for row in data:
+#         writer.writerow([row.field1, row.field2, row.field3])  # เพิ่มข้อมูลจากแต่ละแถว
+
+#     return response
