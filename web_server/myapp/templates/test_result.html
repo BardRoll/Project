@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Test results {{person.student_id}} {{person.name}}</h2>
+    <h2>Test results: {{person.student_id}} {{person.name}}, {{person.student_type}}</h2>
     <form method="post">
         {% csrf_token %}
         <div>                
@@ -28,9 +28,12 @@
         <thead>
             <tr class="header">
                 <th>Keys</th>
-                <th>Time used 1</th>
-                <th>Time used 2</th>
-                <th>Best time</th>
+                <th>Time used: Trial 1 (sec)</th>
+                <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th>
+                <th>Time used: Trial 2 (sec)</th>
+                <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th>
+                <th>Best time (sec)</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -38,8 +41,10 @@
                 <tr>
                     <td>{{key}}</td>
                     <td>{{result.time_1}}</td>
+                    <td>{{result.but_timestamp_1}}</td>
                     <td>{{result.time_2}}</td>
-                    <td>{{result.best_time}}</td>
+                    <td>{{result.but_timestamp_2}}</td>
+                    <td>{{result.best_time}}</td>                    
                 </tr>
             {% endfor %}
         </tbody>
