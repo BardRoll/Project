@@ -61,9 +61,9 @@ def add_user(request):
                     return render(request,"add_user.html")
         name = request.POST["name"]
         surname = request.POST["surname"]
-        student_type = request.POST["student_type"]
+        student_type = request.POST["student_type"].lower()
         if "sports_type" in request.POST:
-            student_type = request.POST["sports_type"]
+            student_type = request.POST["sports_type"].lower()
         
         # บันทึกข้อมูล        
         person = Person.objects.create(
@@ -210,6 +210,7 @@ def upload_csv(request):
     
         return render(request, 'upload_csv.html', {'form': form, 'files': files})
 
+@login_required(login_url="/sign-in")
 def test_result(request, student_id):
     if request.method == 'POST':
         person = Person.objects.get(student_id=student_id)
@@ -262,22 +263,3 @@ def test_result_all(request):
                         return_dict[tc.id]['time'] = res.time_use
     
     return render(request, "test_result_all.html", {"all_result":return_dict})
-
-# import csv
-
-# def download_csv(request):
-#     # ดึงข้อมูลจาก Django ที่ต้องการให้ผู้ใช้ดาวน์โหลด
-#     data = TestResult.objects.all()
-
-#     # สร้าง HttpResponse สำหรับ CSV
-#     response = HttpResponse(content_type='text/csv')
-#     response['Content-Disposition'] = 'attachment; filename="test_result_all.csv"'
-
-#     # ใช้ csv.writer เพื่อเขียนข้อมูลลงใน HttpResponse
-#     writer = csv.writer(response)
-#     writer.writerow(['Header1', 'Header2', 'Header3'])  # เพิ่มหัวข้อที่ต้องการใน CSV
-
-#     for row in data:
-#         writer.writerow([row.field1, row.field2, row.field3])  # เพิ่มข้อมูลจากแต่ละแถว
-
-#     return response
