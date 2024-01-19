@@ -61,10 +61,9 @@ def add_user(request):
                     return render(request,"add_user.html")
         name = request.POST["name"]
         surname = request.POST["surname"]
-        student_type = request.POST["student_type"].lower()
-        if "sports_type" in request.POST:
-            student_type = request.POST["sports_type"].lower()
-        
+        student_type = request.POST["student_type"]        
+        if request.POST["sports_type"] != "":
+            student_type = request.POST["sports_type"]
         # บันทึกข้อมูล        
         person = Person.objects.create(
             student_id = student_id,
