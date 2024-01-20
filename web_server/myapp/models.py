@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Person(models.Model):
-    student_id = models.IntegerField(primary_key=True)
+    student_id = models.CharField(max_length=20, primary_key=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     student_type = models.CharField(max_length=100, blank=True, null=True)
@@ -36,7 +36,7 @@ class TestResult(models.Model):
     pattern = models.TextField(blank=True, null = True)
     trials = models.IntegerField(blank=True, null = True)
     time_use = models.FloatField(blank=True, null = True)
-    status = models.CharField(max_length = 10, blank=True, null = True)
+    status = models.CharField(max_length = 100, blank=True, null = True)
     csv_name = models.TextField(default="-" ,blank=True, null = True)
     time_per_button = models.TextField(blank=True, null = True)
     
