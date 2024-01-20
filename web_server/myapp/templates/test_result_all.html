@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+{% load static %}
     <h2>Test results all</h2>
     <input type="text" id="myInput" onkeyup="SearchFunction2()" placeholder="Search for student ID.." title="Type in a number">
     <br>
@@ -15,11 +16,11 @@
         <table id="myTable2">      
             <thead>
                 <tr class="header">
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Test</th>
-                    <th>Max key</th>
-                    <th>Time (sec)</th>
+                    <th>Student ID <img src="{% static 'img/sort.png' %}" alt="sort" class="custom-icon" onclick="sortTable(0)"></th>
+                    <th>Name <img src="{% static 'img/sort.png' %}" alt="sort" class="custom-icon" onclick="sortTable(1)"></th>
+                    <th>Test <img src="{% static 'img/sort.png' %}" alt="sort" class="custom-icon" onclick="sortTable(2)"></th>
+                    <th>Max key <img src="{% static 'img/sort.png' %}" alt="sort" class="custom-icon" onclick="sortTable(3)"></th>
+                    <th>Time (sec) <img src="{% static 'img/sort.png' %}" alt="sort" class="custom-icon" onclick="sortTable(4)"></th>
                 </tr>
             </thead>
             <tbody>
@@ -35,4 +36,48 @@
             </tbody>
         </table>
     </div>
+    
+    <script>
+        var sortingOrder = [0, 0, 0, 0, 0];  // Initialize sorting order for each column
+
+        function sortTable(col) {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("myTable2");
+            switching = true;
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[col];
+                    y = rows[i + 1].getElementsByTagName("td")[col];
+
+                    var xValue = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
+                    var yValue = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+
+                    if (sortingOrder[col] === 0) {
+                        if (xValue > yValue) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (xValue < yValue) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+
+            // Toggle sorting order for the next click
+            sortingOrder[col] = 1 - sortingOrder[col];
+        }
+    </script>
 {% endblock %}
