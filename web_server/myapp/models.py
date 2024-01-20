@@ -26,8 +26,8 @@ class TestControl(models.Model):
     csv_random_number = models.IntegerField(blank=True, null=True)
     
     def __str__(self):
-        # return str(self.student_id) + ", test id = " + str(self.id)
-        return str(self.id)
+        return str(self.student_id) + ", test id = " + str(self.id)
+        # return str(self.id)
 
 class TestResult(models.Model):
     test_id = models.ForeignKey(TestControl, on_delete=models.CASCADE)
