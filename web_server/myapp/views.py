@@ -40,7 +40,7 @@ def sign_out(request):
     return redirect('/')
 
 def home(request):
-    all_person = Person.objects.all()
+    all_person = Person.objects.all().order_by('student_id')
     return render(request, "home.html", {"all_person":all_person})
 
 @login_required(login_url="/sign-in")
@@ -242,7 +242,7 @@ def test_result(request, student_id):
         return render(request, "test_result.html", {"person":person, "test_control":tcs})
     
 def test_result_all(request):
-    persons = Person.objects.all()
+    persons = Person.objects.all().order_by('student_id')
     return_dict = {}
     for person in persons:
         tcs = TestControl.objects.filter(student_id=person)
