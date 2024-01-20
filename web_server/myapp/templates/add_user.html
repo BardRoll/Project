@@ -18,7 +18,7 @@
         <form method="post" action="add_user">
             {% csrf_token %}
             <label for="student_id">Student ID</label>
-            <input type="number" name="student_id" class="student_id" required>
+            <input type="text" name="student_id" class="name" required>
       
             <label for="name">Name</label>
             <input type="text" name="name" class="name" required>
