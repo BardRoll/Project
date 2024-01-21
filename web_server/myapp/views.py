@@ -148,6 +148,7 @@ def custom_test_control(request, student_id):
         # result = subprocess.run([r"D:\66\1\ProjectPrep\Launchpad\.venv\Scripts\python.exe", "-u", r"D:\66\1\ProjectPrep\Launchpad\show.py"], input=data_to_send, capture_output=True, text=True)
         result = subprocess.run([python_path, "-u", show_path], input=data_to_send, capture_output=True, text=True)
         output_from_show_py = result.stdout
+        print(output_from_show_py)
         output_json = json.loads(output_from_show_py)
         
         # save output from show.py to TestResult
