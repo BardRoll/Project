@@ -10,7 +10,7 @@
         <form method="post">
             {% csrf_token %}
             <label for="student_id">Student ID</label>
-            <input type="number" name="student_id" class="student_id" value="{{person.student_id}}">
+            <input type="text" name="student_id" class="name" value="{{person.student_id}}">
       
             <label for="name">Name</label>
             <input type="text" name="name" class="name" value="{{person.name}}">
