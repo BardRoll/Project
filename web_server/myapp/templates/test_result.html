@@ -24,31 +24,33 @@
             {{result}}
         {% endfor %}
     </h2>
-    <table id="myTable2">      
-        <thead>
-            <tr class="header">
-                <th>Keys</th>
-                <th>Time used: Trial 1 (sec)</th>
-                <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th>
-                <th>Time used: Trial 2 (sec)</th>
-                <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th>
-                <th>Best time (sec)</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, result in all_result.items %}
-                <tr>
-                    <td>{{key}}</td>
-                    <td>{{result.time_1}}</td>
-                    <td>{{result.but_timestamp_1}}</td>
-                    <td>{{result.time_2}}</td>
-                    <td>{{result.but_timestamp_2}}</td>
-                    <td>{{result.best_time}}</td>                    
+    <div id="divTable">
+        <table id="myTable2">      
+            <thead>
+                <tr class="header">
+                    <th>Keys</th>
+                    <th>Trial 1 time used(sec)</th>
+                    <!-- <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th> -->
+                    <th>Trial 2 time used(sec)</th>
+                    <!-- <th title='["all LEDs off", "first button", ..., "last button"]'>Button timestamps (sec)</th> -->
+                    <th>Best time (sec)</th>
+                    
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table> 
+            </thead>
+            <tbody>
+                {% for key, result in all_result.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td>{{result.time_1}}</td>
+                        <!-- <td>{{result.but_timestamp_1}}</td> -->
+                        <td>{{result.time_2}}</td>
+                        <!-- <td>{{result.but_timestamp_2}}</td> -->
+                        <td>{{result.best_time}}</td>                    
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <br>
     <div id="TimeChart" style="max-width:60%; max-height:60%; z-index:1; margin:auto; position:relative;"></div>
     
