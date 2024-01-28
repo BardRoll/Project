@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-di2xi=*k&0t#)j_9e!7*^^!&-l(ro9gwfoo*4&)%f$*dv3-k9_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -75,7 +75,6 @@ WSGI_APPLICATION = 'web_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# SQLite (default django database)
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -83,27 +82,14 @@ WSGI_APPLICATION = 'web_server.wsgi.application'
 #     }
 # }
 
-# PostgreSQL (raspberry pi database)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'launchpad', 
-#         'USER': 'postgres',
-#         'PASSWORD': 'database',
-#         'HOST': 'raspberrypi.local', 
-#         'PORT': '5432',
-#     }
-# }
-
-# PostgreSQL on Aiven (database server)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'defaultdb', 
-        'USER': 'avnadmin',
-        'PASSWORD': 'AVNS_pUxEfbk9pVE2HkuUdzd',
-        'HOST': 'launchpad-ku-1c95.a.aivencloud.com', 
-        'PORT': '19544',
+        'NAME': 'launchpad', 
+        'USER': 'postgres',
+        'PASSWORD': 'database',
+        'HOST': 'raspberrypi.local', 
+        'PORT': '5432',
     }
 }
 
