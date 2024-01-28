@@ -1,0 +1,3 @@
+```console
+sudo nano /etc/
+```
