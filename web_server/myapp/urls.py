@@ -13,4 +13,6 @@ urlpatterns = [
     path('test_control/<student_id>', views.custom_test_control),
     path('test_result/<student_id>', views.test_result),
     path('test_result_all', views.test_result_all),
+    path('download_csv', views.download_csv),
+    path('example_test_control', views.example_test_control),
 ]
