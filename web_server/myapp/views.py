@@ -148,7 +148,6 @@ def custom_test_control(request, student_id):
         # result = subprocess.run([r"D:\66\1\ProjectPrep\Launchpad\.venv\Scripts\python.exe", "-u", r"D:\66\1\ProjectPrep\Launchpad\show.py"], input=data_to_send, capture_output=True, text=True)
         result = subprocess.run([python_path, "-u", show_path], input=data_to_send, capture_output=True, text=True)
         output_from_show_py = result.stdout
-        print(output_from_show_py)
         output_json = json.loads(output_from_show_py)
         
         # save output from show.py to TestResult
@@ -163,7 +162,8 @@ def custom_test_control(request, student_id):
                     tr.pattern = output_json[i][j][1]
                     tr.trials = int(output_json[i][j][2])
                     tr.time_per_button = output_json[i][j][3]
-                    tr.time_use = float(output_json[i][j][4])
+                    time_used = float(output_json[i][j][4])
+                    tr.time_use = round(time_used, 2)
                     tr.status = output_json[i][j][5]
                     tr.save()
         else:
@@ -176,7 +176,8 @@ def custom_test_control(request, student_id):
                     tr.pattern = output_json[i][j][1]
                     tr.trials = int(output_json[i][j][2])
                     tr.time_per_button = output_json[i][j][3]
-                    tr.time_use = float(output_json[i][j][4])
+                    time_used = float(output_json[i][j][4])
+                    tr.time_use = round(time_used, 2)
                     tr.status = output_json[i][j][5]
                     tr.csv_name = output_json[i][j][6]
                     tr.save()
@@ -263,3 +264,142 @@ def test_result_all(request):
                         return_dict[tc.id]['time'] = res.time_use
     
     return render(request, "test_result_all.html", {"all_result":return_dict})
+
+import csv
+import ast
+# def download_csv(request):
+#     persons = Person.objects.all().order_by('student_id')
+#     # return_dict = {}
+#     return_list = []
+#     for person in persons:
+#         tcs = TestControl.objects.filter(student_id=person)
+#         person_id = person.student_id
+#         # person_name = person.name
+#         for tc in tcs:
+#             ress = TestResult.objects.filter(test_id=tc)            
+#             for res in ress:
+#                 # return_dict[res.id] = {'student_id':person_id, 'student_name':person_name, 'id':tc.test_name,'trial':res.trials, 'max_key':res.number_of_keys, 'time':res.time_use, 'time_stamp':res.time_per_button}
+#                 # return_list.append({'student_id':person_id, 'test_name':tc.test_name, 'trial':res.trials, 'key':res.number_of_keys, 'time':res.time_use, 'time_stamp':res.time_per_button})
+#                 time_stamp = ast.literal_eval(res.time_per_button) # change string to list
+#                 len_time_stamp = len(time_stamp)
+#                 time_laps = []
+#                 for i in range(1, len_time_stamp):
+#                     but_time = time_stamp[i] - time_stamp[i-1]
+#                     time_laps.append(round(but_time, 2))
+#                 return_list.append([person_id, tc.id, tc.test_name, res.status[:4], res.number_of_keys, res.trials, time_laps])
+    
+#     len_return_list = len(return_list)
+#     max_key = 0
+#     for index in range(len_return_list):
+#         if return_list[index][4] > max_key:
+#             max_key = return_list[index][4]
+    
+#     max_key += 1
+#     header_csv = ['student_id', 'test_id', 'test_name', 'status', 'key', 'trial']
+#     for index in range(1, max_key):
+#         header_csv.append('time(sec)_key_' + str(index))
+    
+#     data_row_csv = []
+#     len_header_csv = len(header_csv)
+#     for index in range(len_header_csv):
+#         data_row_csv.append('-')
+    
+#     data_csv = []
+#     for index in range(len_return_list):
+#         copy_list = data_row_csv.copy()
+#         data_csv.append(copy_list)
+    
+#     for index in range(len_return_list):
+#         data_csv[index][0] = return_list[index][0]
+#         data_csv[index][1] = return_list[index][1]
+#         data_csv[index][2] = return_list[index][2]
+#         data_csv[index][3] = return_list[index][3]
+#         data_csv[index][4] = return_list[index][4]
+#         data_csv[index][5] = return_list[index][5]
+#         for j in range(len(return_list[index][6])):
+#             data_csv[index][6+j] = return_list[index][6][j]
+
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="raw_result_data.csv"'
+    
+#     writer = csv.writer(response)
+#     writer.writerow(header_csv)  # add data header
+#     for row in data_csv:
+#         writer.writerow(row)  # add data row
+#     return response
+
+def download_csv(request):
+    persons = Person.objects.all().order_by('student_id')
+    return_list = []
+    for person in persons:
+        tcs = TestControl.objects.filter(student_id=person)
+        person_id = person.student_id
+        for tc in tcs:
+            ress = TestResult.objects.filter(test_id=tc)            
+            for res in ress:
+                time_stamp = ast.literal_eval(res.time_per_button) # change string to list
+                len_time_stamp = len(time_stamp)
+                time_laps = []
+                for i in range(1, len_time_stamp):
+                    but_time = time_stamp[i] - time_stamp[i-1]
+                    # time_laps.append(round(but_time, 2))
+                    time_laps.append(but_time)
+                # return_list.append([person_id, tc.id, tc.test_name, res.status[:4], res.number_of_keys, res.trials, time_laps])
+                return_list.append([person_id, tc.id, tc.test_name, res.number_of_keys, res.trials, time_laps, res.status[:4]])
+                
+    header_csv = ['student_id', 'test_id', 'test_name', 'level', 'trial', 'response_key', 'time_sec', 'status']
+    data_row_csv = []
+    len_header_csv = len(header_csv)
+    for index in range(len_header_csv):
+        data_row_csv.append('-')
+    data_csv = []
+    for res_list in return_list:
+        len_time_laps = len(res_list[5])
+        keys_row = len_time_laps
+        for i in range(0, keys_row):
+            copy_list = data_row_csv.copy()
+            data_csv.append(copy_list)
+    
+    count = 0
+    while(True):
+        for res_list in return_list:
+            print(res_list)
+            len_time_laps = len(res_list[5])
+            keys_row = len_time_laps
+            for i in range(0, keys_row):
+                data_csv[count][0] = res_list[0]
+                data_csv[count][1] = res_list[1]
+                data_csv[count][2] = res_list[2]
+                data_csv[count][3] = int(res_list[3]) - 1
+                data_csv[count][4] = res_list[4]
+                data_csv[count][5] = i + 1
+                data_csv[count][6] = res_list[5][i]
+                if res_list[6] == "fail" and i != keys_row - 1:
+                    data_csv[count][7] = "pass"
+                else:
+                    data_csv[count][7] = res_list[6]
+                # data_csv[count][7] = res_list[6]
+                count += 1
+        break
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="raw_result_data.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(header_csv)  # add data header
+    for row in data_csv:
+        writer.writerow(row)  # add data row
+    return response
+
+def example_test_control(request):  
+    import os
+    from django.conf import settings
+    BASE_DIR = settings.BASE_DIR
+    show_path = os.path.join(BASE_DIR, '..','show.py')
+    python_path = os.path.join(BASE_DIR, '..','.venv', 'Scripts', 'python.exe')
+    # send data to show.py
+    data_list = [2, 3, "random", "random", "multi", 1, "-"]   
+    data_to_send = json.dumps(data_list)
+    # result = subprocess.run([r"D:\66\1\ProjectPrep\Launchpad\.venv\Scripts\python.exe", "-u", r"D:\66\1\ProjectPrep\Launchpad\show.py"], input=data_to_send, capture_output=True, text=True)
+    result = subprocess.run([python_path, "-u", show_path], input=data_to_send, capture_output=True, text=True)
+    return redirect("/")
