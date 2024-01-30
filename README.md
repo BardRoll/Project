@@ -1,4 +1,4 @@
-# Setting on Raspberry Pi 3 Model B+
+# Settings on Raspberry Pi 3 Model B+
 ## Config ip address for WiFi
 ```bash
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
