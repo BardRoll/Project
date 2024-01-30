@@ -217,3 +217,13 @@ Add this command at the end of script ([Cron format examples](https://crontab.gu
 ```bash
 */3 * * * * /path/to/backup_script.sh
 ```
+---
+## `show.py`
+At this code
+```python
+media_path = os.path.join(BASE_DIR, 'Launchpad', 'web_server', 'myapp', 'media')
+```
+Need to change path, for example
+```python
+media_path = os.path.join(BASE_DIR, 'your_project_folder', 'web_server', 'myapp', 'media')
+```
